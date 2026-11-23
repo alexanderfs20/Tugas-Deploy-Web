@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  serverExternalPackages: ["better-sqlite3"],
+  serverExternalPackages: ["@prisma/adapter-better-sqlite3", "better-sqlite3"],
   experimental: {
     agentFeedback: true,
   },
@@ -17,7 +17,7 @@ const nextConfig: NextConfig = {
     },
   },
   outputFileTracingIncludes: {
-    "/*": ["./prisma/dev.db"],
+    "/*": ["./prisma/dev.db", "./node_modules/better-sqlite3/prebuilds/*.node"],
   },
 };
 
