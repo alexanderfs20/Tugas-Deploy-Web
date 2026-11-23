@@ -3,12 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
-function ensureLocalWritesAreEnabled() {
-  if (process.env.VERCEL || process.env.NODE_ENV === "production") {
-    throw new Error("Perubahan data hanya tersedia saat aplikasi berjalan lokal.");
-  }
-}
-
 function readTaskForm(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const notes = String(formData.get("notes") ?? "").trim();
@@ -32,14 +26,12 @@ function readId(formData: FormData) {
 }
 
 export async function createTask(formData: FormData) {
-  ensureLocalWritesAreEnabled();
   const data = readTaskForm(formData);
   await prisma.task.create({ data });
   revalidatePath("/");
 }
 
 export async function updateTask(formData: FormData) {
-  ensureLocalWritesAreEnabled();
   const id = readId(formData);
   const data = readTaskForm(formData);
   const completed = formData.get("completed") === "on";
@@ -49,7 +41,6 @@ export async function updateTask(formData: FormData) {
 }
 
 export async function deleteTask(formData: FormData) {
-  ensureLocalWritesAreEnabled();
   const id = readId(formData);
   await prisma.task.delete({ where: { id } });
   revalidatePath("/");
