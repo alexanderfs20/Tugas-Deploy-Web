@@ -11,24 +11,34 @@ export async function TaskBoard() {
   return (
     <section className="workspace" aria-labelledby="tasks-heading">
       <div className="section-heading">
-        <div>
-          <p className="eyebrow section-kicker">DAFTAR KEGIATAN</p>
-          <h2 id="tasks-heading">Yang ingin kamu tuntaskan</h2>
-        </div>
+        <h1 id="tasks-heading">Daftar tugas</h1>
         <p className="progress-count"><strong>{doneCount.toString().padStart(2, "0")}</strong><span> / {tasks.length.toString().padStart(2, "0")} selesai</span></p>
       </div>
 
       {!canEdit && (
-        <p className="readonly-notice">Mode demo: data dapat dilihat, tetapi tambah/edit/hapus hanya aktif saat dijalankan lokal.</p>
+        <p className="readonly-notice">Mode demo · hanya bisa dilihat</p>
       )}
 
       <div className="task-layout">
+        {canEdit && (
+          <aside className="create-panel">
+            <h2>Tambah tugas</h2>
+            <form action={createTask} className="create-form">
+              <label htmlFor="new-title">Judul</label>
+              <input id="new-title" name="title" placeholder="Nama tugas" maxLength={100} required />
+              <label htmlFor="new-notes">Catatan</label>
+              <input id="new-notes" name="notes" placeholder="Opsional" maxLength={500} />
+              <button className="primary-button" type="submit">Tambah</button>
+            </form>
+          </aside>
+        )}
+
         <div className="task-list">
           {tasks.length === 0 ? (
             <div className="empty-state">
               <span className="empty-icon">✳</span>
-              <h3>Mulai dengan satu hal kecil.</h3>
-              <p>Tambahkan kegiatan pertama di formulir sebelah.</p>
+              <h3>Belum ada tugas</h3>
+              <p>Tambahkan tugas pertama.</p>
             </div>
           ) : tasks.map((task, index) => (
             <article className={`task-card${task.completed ? " task-complete" : ""}`} key={task.id}>
@@ -59,20 +69,6 @@ export async function TaskBoard() {
           ))}
         </div>
 
-        {canEdit && (
-          <aside className="create-panel">
-            <p className="eyebrow">TAMBAH KEGIATAN</p>
-            <h3>Satu langkah<br />pada satu waktu.</h3>
-            <form action={createTask} className="create-form">
-              <label htmlFor="new-title">Nama kegiatan</label>
-              <input id="new-title" name="title" placeholder="Contoh: baca satu bab" maxLength={100} required />
-              <label htmlFor="new-notes">Catatan <span>(opsional)</span></label>
-              <textarea id="new-notes" name="notes" placeholder="Apa yang perlu diingat?" maxLength={500} rows={4} />
-              <button className="primary-button" type="submit"><span>+</span> Tambahkan</button>
-            </form>
-            <p className="panel-footnote">SETIAP PROGRES TETAP BERARTI.</p>
-          </aside>
-        )}
       </div>
     </section>
   );
